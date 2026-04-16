@@ -64,10 +64,11 @@ body {
 
 .logo-img {
     display: block;
-    max-width: 280px;
-    width: 80%;
+    max-width: 320px;
+    width: 85%;
     height: auto;
     margin: 16px auto 0;
+    filter: drop-shadow(0 4px 20px rgba(59, 130, 246, 0.2));
 }
 
 .subtitle {

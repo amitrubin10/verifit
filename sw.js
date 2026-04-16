@@ -1,4 +1,4 @@
-const CACHE_NAME = 'verifit-v2';
+const CACHE_NAME = 'verifit-v3';
 const ASSETS = [
     'index.html',
     'css/style.css',
