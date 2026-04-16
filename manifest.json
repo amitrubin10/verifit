@@ -1,6 +1,6 @@
 {
-    "name": "FitDay - תפריט ואימונים",
-    "short_name": "FitDay",
+    "name": "Verifit - תפריט ואימונים",
+    "short_name": "Verifit",
     "description": "תפריט יומי ואימונים ביתיים לירידה במשקל וחיטוב",
     "start_url": "index.html",
     "display": "standalone",
