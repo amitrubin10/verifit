@@ -83,6 +83,36 @@ const FOODS_DB = {
     ]
 };
 
+// אימוג'י למאכלים
+const FOOD_EMOJI = {
+    // חלבונים
+    chicken_breast: "\uD83C\uDF57", eggs: "\uD83C\uDF73", tuna_canned: "\uD83D\uDC1F", cottage: "\uD83E\uDDC0",
+    turkey_breast: "\uD83C\uDF57", beef_lean: "\uD83E\uDD69", yogurt_greek: "\uD83E\uDD5B", white_cheese_5: "\uD83E\uDDC0",
+    shakshuka: "\uD83C\uDF73", schnitzel: "\uD83C\uDF57", tofu: "\uD83E\uDDC6", lentils_cooked: "\uD83E\uDED8",
+    // פחמימות
+    rice: "\uD83C\uDF5A", brown_rice: "\uD83C\uDF5A", pita: "\uD83E\uDD59", whole_bread: "\uD83C\uDF5E",
+    sweet_potato: "\uD83C\uDF60", potato: "\uD83E\uDD54", couscous: "\uD83E\uDED5", pasta: "\uD83C\uDF5D",
+    bulgur: "\uD83C\uDF3E", oats: "\uD83E\uDD63", corn: "\uD83C\uDF3D",
+    // ירקות
+    cucumber: "\uD83E\uDD52", tomato: "\uD83C\uDF45", pepper: "\uD83C\uDF36\uFE0F", lettuce: "\uD83E\uDD6C",
+    carrot: "\uD83E\uDD55", cabbage: "\uD83E\uDD6C", broccoli: "\uD83E\uDD66", zucchini: "\uD83E\uDD52",
+    eggplant: "\uD83C\uDF46", onion: "\uD83E\uDDC5", israeli_salad: "\uD83E\uDD57",
+    // שומנים
+    olive_oil: "\uD83E\uDED2", avocado: "\uD83E\uDD51", tahini: "\uD83E\uDD5C", hummus: "\uD83E\uDED8",
+    almonds: "\uD83C\uDF30", peanuts: "\uD83E\uDD5C", peanut_butter: "\uD83E\uDD5C",
+    // פירות
+    apple: "\uD83C\uDF4E", banana: "\uD83C\uDF4C", orange: "\uD83C\uDF4A", watermelon: "\uD83C\uDF49",
+    grapes: "\uD83C\uDF47", strawberry: "\uD83C\uDF53", dates: "\uD83C\uDF34",
+    // חטיפים
+    rice_cakes: "\uD83C\uDF58", granola_bar: "\uD83C\uDF6B", protein_shake: "\uD83E\uDD64",
+    veggies_hummus: "\uD83E\uDD57", cottage_fruit: "\uD83C\uDF53",
+    // ג'אנק אהוב
+    pizza_slice: "\uD83C\uDF55", pizza_2slices: "\uD83C\uDF55", burekas_cheese: "\uD83E\uDD50", burekas_potato: "\uD83E\uDD50",
+    hamburger: "\uD83C\uDF54", pita_omelette: "\uD83E\uDD59", pita_shawarma: "\uD83E\uDD59", sabich: "\uD83E\uDD59",
+    falafel_pita: "\uD83E\uDDC6", schnitzel_pita: "\uD83E\uDD59", toast_cheese: "\uD83C\uDF5E",
+    jachnun: "\uD83E\uDED3", malawach: "\uD83E\uDED3"
+};
+
 // רשימת מאכלים אהובים - ג'אנק שאפשר לשלב בתפריט
 const FOOD_FAVORITE_OPTIONS = [
     { label: "פיצה", ids: ["pizza_slice", "pizza_2slices"] },

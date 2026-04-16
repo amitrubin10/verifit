@@ -11,9 +11,39 @@ const App = {
     init() {
         if (Preferences.isSetupDone()) {
             this.prefs = Preferences.load();
-            this.showMainScreen();
+            // תמיד מציג הגדרות קודם עם הערכים השמורים
+            this.showSetupScreen();
+            this.prefillSetup();
         } else {
             this.showSetupScreen();
+        }
+    },
+
+    prefillSetup() {
+        if (!this.prefs) return;
+        document.getElementById('gender').value = this.prefs.gender;
+        document.getElementById('age').value = this.prefs.age;
+        document.getElementById('height').value = this.prefs.height;
+        document.getElementById('weight').value = this.prefs.weight;
+        document.getElementById('target-weight').value = this.prefs.targetWeight;
+        document.getElementById('activity-level').value = this.prefs.activityLevel;
+        // סימון מאכלים אהובים
+        if (this.prefs.favorites) {
+            document.querySelectorAll('#food-favorites .chip').forEach(c => {
+                if (this.prefs.favorites.includes(c.dataset.value)) c.classList.add('selected');
+            });
+        }
+        // סימון מאכלים לא אהובים
+        if (this.prefs.dislikes) {
+            document.querySelectorAll('#food-dislikes .chip').forEach(c => {
+                if (this.prefs.dislikes.includes(c.dataset.value)) c.classList.add('selected');
+            });
+        }
+        // סימון ציוד
+        if (this.prefs.equipment) {
+            document.querySelectorAll('#equipment-list .chip').forEach(c => {
+                if (this.prefs.equipment.includes(c.dataset.value)) c.classList.add('selected');
+            });
         }
     },
 
@@ -142,18 +172,8 @@ const App = {
 
     setupSettingsBtn() {
         document.getElementById('settings-btn').addEventListener('click', () => {
-            if (confirm('לחזור למסך הגדרות? (הנתונים ישמרו)')) {
-                this.showSetupScreen();
-                // מילוי הטופס עם ערכים קיימים
-                if (this.prefs) {
-                    document.getElementById('gender').value = this.prefs.gender;
-                    document.getElementById('age').value = this.prefs.age;
-                    document.getElementById('height').value = this.prefs.height;
-                    document.getElementById('weight').value = this.prefs.weight;
-                    document.getElementById('target-weight').value = this.prefs.targetWeight;
-                    document.getElementById('activity-level').value = this.prefs.activityLevel;
-                }
-            }
+            this.showSetupScreen();
+            this.prefillSetup();
         });
     },
 
@@ -240,7 +260,7 @@ const App = {
                     <ul class="meal-items">
                         ${meal.items.map(item => `
                             <li>
-                                <span class="meal-item-name">${item.name}</span>
+                                <span class="meal-item-name"><span class="meal-item-emoji">${FOOD_EMOJI[item.id] || '\uD83C\uDF7D\uFE0F'}</span>${item.name}</span>
                                 <span class="meal-item-amount">${item.serving} ${item.unit}</span>
                             </li>
                         `).join('')}
@@ -554,7 +574,7 @@ const App = {
                 const cal = MealPlanner.itemCalories(f);
                 const prot = MealPlanner.itemMacros(f).protein;
                 return `<div class="search-result-item" data-index="${i}">
-                    <span class="search-result-name">${f.name}</span>
+                    <span class="search-result-name">${FOOD_EMOJI[f.id] || '\uD83C\uDF7D\uFE0F'} ${f.name}</span>
                     <span class="search-result-cal">${cal} קל' | ${prot}g \u05D7\u05DC\u05D1\u05D5\u05DF</span>
                 </div>`;
             }).join('');
@@ -619,6 +639,7 @@ const App = {
 
     addFoodToLog(food) {
         this.foodLog.push({
+            id: food.id,
             name: food.name,
             cal: food.cal,
             protein: food.protein,
@@ -653,7 +674,7 @@ const App = {
             return `
                 <div class="food-log-item">
                     <div class="food-log-info">
-                        <div class="food-log-name">${item.name}</div>
+                        <div class="food-log-name">${item.isCustom ? '\uD83C\uDF7D\uFE0F' : (FOOD_EMOJI[item.id] || '\uD83C\uDF7D\uFE0F')} ${item.name}</div>
                         <div class="food-log-details">${item.serving}g | ${cal} \u05E7\u05DC' | ${prot}g \u05D7\u05DC\u05D1\u05D5\u05DF</div>
                     </div>
                     <button class="food-log-delete" data-index="${i}">\u00D7</button>
