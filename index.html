@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <title>FitDay - תפריט ואימונים</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- מסך הגדרות ראשוני -->
+    <div id="setup-screen" class="screen">
+        <div class="setup-container">
+            <h1 class="logo">FitDay</h1>
+            <p class="subtitle">התפריט והאימון שלך - כל יום</p>
+
+            <form id="setup-form">
+                <div class="form-section">
+                    <h2>פרטים אישיים</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="gender">מין</label>
+                            <select id="gender" required>
+                                <option value="">בחר</option>
+                                <option value="male">גבר</option>
+                                <option value="female">אישה</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="age">גיל</label>
+                            <input type="number" id="age" min="14" max="80" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="height">גובה (ס"מ)</label>
+                            <input type="number" id="height" min="140" max="220" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="weight">משקל (ק"ג)</label>
+                            <input type="number" id="weight" min="40" max="200" step="0.1" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="target-weight">משקל יעד (ק"ג)</label>
+                        <input type="number" id="target-weight" min="40" max="200" step="0.1" required>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>רמת פעילות</h2>
+                    <select id="activity-level" required>
+                        <option value="">בחר רמת פעילות</option>
+                        <option value="sedentary">יושבני (עבודה משרדית)</option>
+                        <option value="light">פעילות קלה (1-2 אימונים בשבוע)</option>
+                        <option value="moderate">פעילות בינונית (3-4 אימונים בשבוע)</option>
+                        <option value="active">פעיל מאוד (5+ אימונים בשבוע)</option>
+                    </select>
+                </div>
+
+                <div class="form-section favorites-section">
+                    <h2>מה אני אוהב לאכול?</h2>
+                    <p class="hint">סמן את האהובים עליך - נשלב אותם בתפריט בצורה חכמה</p>
+                    <div class="food-prefs" id="food-favorites">
+                        <!-- ימולא דינמית -->
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>מאכלים שאני לא אוהב</h2>
+                    <p class="hint">סמן מה לא לשלב בתפריט</p>
+                    <div class="food-prefs" id="food-dislikes">
+                        <!-- ימולא דינמית -->
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>ציוד זמין לאימון</h2>
+                    <div class="equipment-list" id="equipment-list">
+                        <!-- ימולא דינמית -->
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary">יאללה, מתחילים!</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- מסך ראשי יומי -->
+    <div id="main-screen" class="screen hidden">
+        <!-- ניווט עליון -->
+        <header class="top-bar">
+            <h1 class="app-title">FitDay</h1>
+            <div class="top-bar-buttons">
+                <button id="info-btn" class="icon-btn" aria-label="איך זה עובד">&#9432;</button>
+                <button id="settings-btn" class="icon-btn" aria-label="הגדרות">&#9881;</button>
+            </div>
+        </header>
+
+        <!-- מסך הסבר -->
+        <div id="info-screen" class="info-overlay hidden">
+            <div class="info-content">
+                <button id="info-close" class="info-close">&times;</button>
+                <h1>איך FitDay עובד?</h1>
+
+                <div class="info-section">
+                    <h2>המטרה</h2>
+                    <p>FitDay עוזר לך לרדת במשקל ולהתחטב בו-זמנית. המערכת בונה לך כל יום תפריט אוכל מותאם אישית + תוכנית אימונים ביתית, ועוקבת אחרי ההתקדמות שלך.</p>
+                </div>
+
+                <div class="info-section">
+                    <h2>חישוב הקלוריות</h2>
+                    <p>המערכת מחשבת כמה קלוריות הגוף שלך שורף ביום לפי <strong>נוסחת Mifflin-St Jeor</strong>:</p>
+                    <div class="info-formula">
+                        <p><strong>גברים:</strong> (10 &times; משקל) + (6.25 &times; גובה) - (5 &times; גיל) + 5</p>
+                        <p><strong>נשים:</strong> (10 &times; משקל) + (6.25 &times; גובה) - (5 &times; גיל) - 161</p>
+                    </div>
+                    <p>התוצאה מוכפלת במקדם פעילות (1.2-1.725) ומתקבל ה-<strong>TDEE</strong> - סה"כ ההוצאה הקלורית היומית שלך.</p>
+                    <p>מהמספר הזה מורידים <strong>500 קלוריות</strong> (גירעון) = היעד היומי שלך. גירעון של 500 קלוריות ביום = ירידה של כ-<strong>0.5 ק"ג בשבוע</strong>.</p>
+                </div>
+
+                <div class="info-section">
+                    <h2>חלוקת המאקרו (חיטוב)</h2>
+                    <p>החלוקה מותאמת לחיטוב ובניית שריר:</p>
+                    <ul>
+                        <li><strong>40% חלבון</strong> - חיוני לבניית שריר ושמירה עליו בזמן דיאטה</li>
+                        <li><strong>30% פחמימות</strong> - אנרגיה לאימונים ולתפקוד יומיומי</li>
+                        <li><strong>30% שומן</strong> - הורמונים, ויטמינים, שובע</li>
+                    </ul>
+                </div>
+
+                <div class="info-section">
+                    <h2>איך התפריט נבנה</h2>
+                    <p>המערכת מרכיבה תפריט יומי מתוך מאגר של <strong>65+ מאכלים ישראליים</strong>:</p>
+                    <ul>
+                        <li>מחלקת את הקלוריות: בוקר 25%, צהריים 35%, ערב 25%, חטיפים 15%</li>
+                        <li>בוחרת מקורות חלבון לפי <strong>יחס חלבון/קלוריות</strong> (מעדיפה חזה עוף על בשר שומני)</li>
+                        <li>מתאימה <strong>גודל מנות</strong> כדי לפגוע ביעד הקלורי</li>
+                        <li>משלבת מאכלים אהובים (פיצה, בורקס...) ב-30-40% מהארוחות</li>
+                        <li>מסננת מאכלים שסימנת "לא אוהב"</li>
+                        <li>אם הסה"כ חורג מהיעד - מקטינה מנות אוטומטית</li>
+                    </ul>
+                </div>
+
+                <div class="info-section">
+                    <h2>מעקב אכילה</h2>
+                    <p>מעבר לתפריט המומלץ, אפשר לרשום מה באמת אכלת. המערכת מחשבת בזמן אמת:</p>
+                    <ul>
+                        <li>כמה קלוריות צרכת מתוך היעד</li>
+                        <li>כמה חלבון אכלת</li>
+                        <li>האם אתה בגירעון (ירוק) או בעודף (אדום)</li>
+                    </ul>
+                </div>
+
+                <div class="info-section">
+                    <h2>תוכנית האימונים</h2>
+                    <p>תוכנית שבועית מותאמת לחיטוב (היפרטרופיה):</p>
+                    <ul>
+                        <li><strong>ראשון:</strong> חזה + כתפיים + תלת (Push)</li>
+                        <li><strong>שני:</strong> ירכיים + ישבן (Legs)</li>
+                        <li><strong>שלישי:</strong> קרדיו + בטן (שריפת שומן)</li>
+                        <li><strong>רביעי:</strong> גב + ביספס (Pull)</li>
+                        <li><strong>חמישי:</strong> ירכיים + ישבן + בטן (Legs)</li>
+                        <li><strong>שישי:</strong> אימון כל הגוף</li>
+                        <li><strong>שבת:</strong> מנוחה</li>
+                    </ul>
+                    <p>המערכת עוקבת אחרי <strong>עלייה הדרגתית</strong> (Progressive Overload) - רושמת כמה חזרות ומשקל עשית, כדי שתוכל להגדיל בפעם הבאה.</p>
+                </div>
+
+                <div class="info-section">
+                    <h2>מעקב התקדמות</h2>
+                    <ul>
+                        <li><strong>גרף משקל</strong> - מראה את המגמה לאורך זמן</li>
+                        <li><strong>מעקב היקפים</strong> - מותניים (צריך לרדת), חזה/זרוע/ירך (צריך לעלות = חיטוב)</li>
+                        <li><strong>רצף אימונים</strong> - כמה ימים ברצף התאמנת</li>
+                    </ul>
+                </div>
+
+                <div class="info-section">
+                    <h2>איך מגיעים למטרה?</h2>
+                    <p>השילוב של שלושת הדברים הוא המפתח:</p>
+                    <ol>
+                        <li><strong>גירעון קלורי</strong> - אוכלים פחות ממה שהגוף שורף → הגוף שורף שומן</li>
+                        <li><strong>חלבון גבוה</strong> - שומר על השריר בזמן שהשומן יורד</li>
+                        <li><strong>אימוני כוח</strong> - בונה ומחטב את השריר, מעלה את חילוף החומרים</li>
+                    </ol>
+                    <p>התוצאה: הגוף הופך להיות יותר שרירי ופחות שומני, גם אם המשקל לא תמיד יורד בקצב שציפית - כי שריר שוקל יותר משומן. לכן חשוב לעקוב גם אחרי <strong>היקפים</strong> ולא רק אחרי המשקל.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- תאריך וקלוריות -->
+        <div class="daily-header">
+            <div class="date-display" id="today-date"></div>
+            <div class="calories-summary">
+                <span class="cal-target" id="cal-target">0</span>
+                <span class="cal-label">קלוריות ליום</span>
+            </div>
+        </div>
+
+        <!-- טאבים -->
+        <div class="tabs">
+            <button class="tab active" data-tab="meals">תפריט</button>
+            <button class="tab" data-tab="workout">אימון</button>
+            <button class="tab" data-tab="progress">מעקב</button>
+        </div>
+
+        <!-- תוכן טאבים -->
+        <div class="tab-content">
+            <!-- טאב תפריט -->
+            <div id="tab-meals" class="tab-panel active">
+                <div id="meals-container">
+                    <!-- ימולא דינמית -->
+                </div>
+
+                <!-- מעקב אכילה יומי -->
+                <div class="food-log-section">
+                    <h2>מה אכלתי היום</h2>
+                    <div class="food-search-wrapper">
+                        <input type="text" id="food-search" placeholder="חפש מאכל..." autocomplete="off">
+                        <div id="food-search-results" class="food-search-results hidden">
+                            <!-- ימולא דינמית -->
+                        </div>
+                    </div>
+                    <button class="btn-custom-food" id="btn-custom-food">+ מאכל חופשי</button>
+
+                    <!-- טופס מאכל חופשי -->
+                    <div id="custom-food-form" class="custom-food-form hidden">
+                        <input type="text" id="custom-name" placeholder="שם המאכל">
+                        <div class="custom-food-row">
+                            <input type="number" id="custom-cal" placeholder="קלוריות" min="0">
+                            <input type="number" id="custom-protein" placeholder="חלבון (g)" min="0">
+                            <input type="number" id="custom-grams" placeholder="גרם" min="1" value="100">
+                        </div>
+                        <button class="btn-small btn-full" id="btn-add-custom">הוסף</button>
+                    </div>
+
+                    <!-- רשימת מה שאכלתי -->
+                    <div id="food-log-list">
+                        <!-- ימולא דינמית -->
+                    </div>
+                </div>
+
+                <!-- סרגל סיכום יומי -->
+                <div class="daily-summary-bar" id="daily-summary-bar">
+                    <div class="summary-row">
+                        <div class="summary-item">
+                            <span class="summary-label">קלוריות</span>
+                            <span class="summary-value" id="log-cal-eaten">0</span>
+                            <span class="summary-of">/ <span id="log-cal-target">0</span></span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">חלבון</span>
+                            <span class="summary-value" id="log-protein-eaten">0</span>
+                            <span class="summary-of">/ <span id="log-protein-target">0</span>g</span>
+                        </div>
+                        <div class="summary-item summary-deficit">
+                            <span class="summary-label">גירעון</span>
+                            <span class="summary-value" id="log-deficit">0</span>
+                        </div>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" id="cal-progress-bar"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- טאב אימון -->
+            <div id="tab-workout" class="tab-panel">
+                <div class="workout-header">
+                    <h2 id="workout-title">אימון היום</h2>
+                    <div class="workout-progress">
+                        <span id="exercises-done">0</span>/<span id="exercises-total">0</span>
+                    </div>
+                </div>
+                <div id="exercises-container">
+                    <!-- ימולא דינמית -->
+                </div>
+                <div id="rest-timer" class="rest-timer hidden">
+                    <div class="timer-display" id="timer-display">00:00</div>
+                    <button class="btn-timer" id="timer-btn">התחל מנוחה</button>
+                </div>
+            </div>
+
+            <!-- טאב מעקב -->
+            <div id="tab-progress" class="tab-panel">
+                <div class="weight-input-section">
+                    <h2>עדכון משקל</h2>
+                    <div class="weight-input-row">
+                        <input type="number" id="weight-input" step="0.1" placeholder="משקל היום">
+                        <button class="btn-small" id="save-weight-btn">שמור</button>
+                    </div>
+                </div>
+                <div class="progress-stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="current-weight-display">--</div>
+                        <div class="stat-label">משקל נוכחי</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="weight-diff-display">--</div>
+                        <div class="stat-label">שינוי</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="streak-display">0</div>
+                        <div class="stat-label">רצף אימונים</div>
+                    </div>
+                </div>
+                <!-- מעקב היקפים -->
+                <div class="measurements-section">
+                    <h2>מעקב היקפים (ס"מ)</h2>
+                    <p class="hint">חיטוב = שינוי בהיקפים, לא רק במשקל!</p>
+                    <div class="measurements-grid">
+                        <div class="measure-item">
+                            <label for="m-waist">מותניים</label>
+                            <input type="number" id="m-waist" step="0.5" placeholder="--">
+                        </div>
+                        <div class="measure-item">
+                            <label for="m-chest">חזה</label>
+                            <input type="number" id="m-chest" step="0.5" placeholder="--">
+                        </div>
+                        <div class="measure-item">
+                            <label for="m-arm">זרוע</label>
+                            <input type="number" id="m-arm" step="0.5" placeholder="--">
+                        </div>
+                        <div class="measure-item">
+                            <label for="m-thigh">ירך</label>
+                            <input type="number" id="m-thigh" step="0.5" placeholder="--">
+                        </div>
+                    </div>
+                    <button class="btn-small btn-full" id="save-measurements-btn">שמור היקפים</button>
+                </div>
+
+                <!-- שינויים בהיקפים -->
+                <div class="measurements-diff" id="measurements-diff">
+                    <!-- ימולא דינמית -->
+                </div>
+
+                <div class="chart-container">
+                    <h3>גרף משקל</h3>
+                    <canvas id="weight-chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="data/foods.json.js"></script>
+    <script src="data/exercises.json.js"></script>
+    <script src="js/preferences.js"></script>
+    <script src="js/meals.js"></script>
+    <script src="js/workouts.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
