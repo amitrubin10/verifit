@@ -1,4 +1,4 @@
-const CACHE_NAME = 'verifit-v1';
+const CACHE_NAME = 'verifit-v2';
 const ASSETS = [
     'index.html',
     'css/style.css',
@@ -8,7 +8,8 @@ const ASSETS = [
     'js/preferences.js',
     'data/foods.json.js',
     'data/exercises.json.js',
-    'manifest.json'
+    'manifest.json',
+    'icons/verifit-logo.png'
 ];
 
 // התקנה - שמירת קבצים בcache
