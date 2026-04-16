@@ -64,13 +64,12 @@ body {
 
 .logo-img {
     display: block;
-    max-width: 340px;
-    width: 88%;
+    max-width: 380px;
+    width: 92%;
     height: auto;
     margin: 16px auto 0;
-    filter: drop-shadow(0 4px 20px rgba(59, 130, 246, 0.25));
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
+    border-radius: var(--radius);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 .subtitle {
