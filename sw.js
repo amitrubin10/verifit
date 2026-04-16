@@ -1,4 +1,4 @@
-const CACHE_NAME = 'fitday-v6';
+const CACHE_NAME = 'fitday-v7';
 const ASSETS = [
     'index.html',
     'css/style.css',

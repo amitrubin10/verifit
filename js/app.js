@@ -59,25 +59,26 @@ const App = {
 
     renderFoodFavorites() {
         const container = document.getElementById('food-favorites');
-        container.innerHTML = FOOD_FAVORITE_OPTIONS.map(opt =>
-            `<span class="chip" data-value="${opt.label}">${opt.label}</span>`
-        ).join('');
+        container.innerHTML = FOOD_FAVORITE_OPTIONS.map(opt => {
+            const emoji = FOOD_EMOJI[opt.ids[0]] || '\uD83C\uDF7D\uFE0F';
+            return `<span class="chip" data-value="${opt.label}">${emoji} ${opt.label}</span>`;
+        }).join('');
         container.addEventListener('click', (e) => {
-            if (e.target.classList.contains('chip')) {
-                e.target.classList.toggle('selected');
-            }
+            const chip = e.target.closest('.chip');
+            if (chip) chip.classList.toggle('selected');
         });
     },
 
     renderFoodDislikes() {
         const container = document.getElementById('food-dislikes');
-        container.innerHTML = FOOD_DISLIKE_OPTIONS.map(name =>
-            `<span class="chip" data-value="${name}">${name}</span>`
-        ).join('');
+        container.innerHTML = FOOD_DISLIKE_OPTIONS.map(name => {
+            const ids = DISLIKE_TO_IDS[name] || [];
+            const emoji = (ids.length && FOOD_EMOJI[ids[0]]) || '\uD83C\uDF7D\uFE0F';
+            return `<span class="chip" data-value="${name}">${emoji} ${name}</span>`;
+        }).join('');
         container.addEventListener('click', (e) => {
-            if (e.target.classList.contains('chip')) {
-                e.target.classList.toggle('selected');
-            }
+            const chip = e.target.closest('.chip');
+            if (chip) chip.classList.toggle('selected');
         });
     },
 
