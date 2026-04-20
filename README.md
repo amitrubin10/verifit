@@ -1,5 +1,9 @@
 # Verifit
 
+<p align="center">
+  <img src="screenshots/hero.jpg" width="300" alt="Verifit app" />
+</p>
+
 **Personalized fitness & nutrition planner — built as a Progressive Web App (PWA)**
 
 Verifit generates a fully customized daily plan based on personal profile, food preferences, and available equipment. Designed for real daily use, it combines smart meal planning with structured workout tracking and long-term body progress monitoring.
