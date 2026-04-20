@@ -90,4 +90,4 @@ Currently in active use. Developed as a personal product — not a tutorial or d
 ## Author
 
 **Amit Rubin**
-ERP & AI Operations Lead | 20 years in enterprise software
+ERP & AI Operations Lead | QA, Automation & Product at Hashavshevet (Wizsoft)
